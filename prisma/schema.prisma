@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
   provider = "prisma-client-js"
@@ -14,44 +9,44 @@ datasource db {
 }
 model User {
   id                  String   @id @default(uuid())
-  user_id             String   @unique   // Jedinstveni identifikator za korisnika
-  country             String              // Zemlja korisnika
-  device_os           String              // OS uređaja (iOS, Android, Web)
-  registration_date   DateTime            // Datum i vreme registracije
+  user_id             String   @unique   
+  country             String              
+  device_os           String              
+  registration_date   DateTime            
 
-  sessions            Session[]           // Veza sa sesijama
+  sessions            Session[]          
 
-  homeMatches         Match[] @relation("HomeMatches")  // Utakmice gde je korisnik domaćin
-  awayMatches         Match[] @relation("AwayMatches")  // Utakmice gde je korisnik gost
+  homeMatches         Match[] @relation("HomeMatches") 
+  awayMatches         Match[] @relation("AwayMatches")  
 }
 
 model Session {
   id          String   @id @default(uuid())
-  user_id     String              // Veza sa korisnikom
+  user_id     String              
   user        User     @relation(fields: [user_id], references: [user_id])
 
-  start_time  DateTime            // Vreme početka sesije
-  end_time    DateTime?           // Vreme kraja sesije (može biti null ako sesija nije završena)
+  start_time  DateTime            
+  end_time    DateTime?           
 }
 
 model Match {
   id                String   @id @default(uuid())
-  match_id          String   // Jedinstveni identifikator utakmice
-  home_user_id      String   // Korisnik koji igra kod kuće
-  away_user_id      String   // Korisnik koji igra u gostima
+  match_id          String   
+  home_user_id      String   
+  away_user_id      String   
 
   home_user         User?    @relation("HomeMatches", fields: [home_user_id], references: [user_id]) //oneToMany
   away_user         User?    @relation("AwayMatches", fields: [away_user_id], references: [user_id])
 
-  home_goals_scored Int?     // Broj golova kod kuće
-  away_goals_scored Int?     // Broj golova u gostima
+  home_goals_scored Int?     
+  away_goals_scored Int?     
 
-  match_start       DateTime  // Vreme početka utakmice
-  match_end         DateTime? // Vreme kraja utakmice (može biti null ako nije završena)
+  match_start       DateTime  
+  match_end         DateTime?
 }
 
 model Timezone {
   id        String   @id @default(uuid())
-  country   String   @unique             // Zemlja (jedinstvena po vremenskoj zoni)
-  timezone  String                       // Vremenska zona (npr. "America/New_York")
+  country   String   @unique             
+  timezone  String                       
 }

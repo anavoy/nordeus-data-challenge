@@ -19,7 +19,7 @@ const routes = (app: Express) => {
         next()
     })
 
-    app.get('/v1/health-check', (req, res) => {
+    app.get('/v1/health-check', (_req, res) => {
         res.sendStatus(200)
     })
 
