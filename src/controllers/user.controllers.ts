@@ -45,7 +45,7 @@ export const getUserStats = async (req: Request, res: Response, next: NextFuncti
 
     // Izračunavanje dana od poslednjeg logina
     const daysSinceLastLogin = lastSession
-      ? dayjs(endOfTheDay).diff(dayjs(lastSession.start_time), 'day')
+      ? dayjs(endOfTheDay ?? new Date()).diff(dayjs(lastSession.start_time), 'day')
       : null;
 
     // Početak dana ako je dat datum, inače null

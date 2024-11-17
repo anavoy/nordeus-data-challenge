@@ -13,13 +13,14 @@ paths:
           schema:
             type: string
           description: The ID of the user
+          example: '5e1cbb73-e3a5-36eb-d522-24c3f785af01'
         - in: query
           name: date
           required: false
           schema:
             type: string
             format: date
-            example: '2023/10/01'
+            example: '2024/10/24'
           description: The date to calculate stats up to (optional)
       responses:
         '200':
@@ -77,7 +78,7 @@ paths:
           schema:
             type: string
             format: date
-            example: '2023/10/01'
+            example: '2024/10/24'
           description: The date to filter stats (optional)
       responses:
         '200':
