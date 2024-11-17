@@ -1,0 +1,108 @@
+openapi: 3.0.0
+info:
+  title: Nordeus Stats API
+  version: 1.0.0
+paths:
+  /v1/user:
+    get:
+      summary: Get user statistics
+      parameters:
+        - in: query
+          name: user_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the user
+        - in: query
+          name: date
+          required: false
+          schema:
+            type: string
+            format: date
+            example: '2023/10/01'
+          description: The date to calculate stats up to (optional)
+      responses:
+        '200':
+          description: Successful response with user statistics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties:
+                          country:
+                            type: string
+                          registration_time:
+                            type: string
+                            format: date-time
+                      stats:
+                        type: object
+                        properties:
+                          days_since_last_login:
+                            type: integer
+                          session_count:
+                            type: integer
+                          matches:
+                            type: object
+                            properties:
+                              wins:
+                                type: integer
+                              draws:
+                                type: integer
+                              losses:
+                                type: integer
+                          points:
+                            type: integer
+                          timeSpentInMatchesPercentage:
+                            type: integer
+                            nullable: true
+        '404':
+          description: User not found
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+  /v1/game:
+    get:
+      summary: Get game statistics
+      parameters:
+        - in: query
+          name: date
+          required: false
+          schema:
+            type: string
+            format: date
+            example: '2023/10/01'
+          description: The date to filter stats (optional)
+      responses:
+        '200':
+          description: Successful response with game statistics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  dailyActiveUsers:
+                    type: integer
+                  totalSessions:
+                    type: integer
+                  averageSessionsPerUser:
+                    type: number
+                  usersWithMostGoals:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        userId:
+                          type: string
+                        totalPoints:
+                          type: integer
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error

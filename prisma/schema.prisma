@@ -1,52 +1,61 @@
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db"
+  url      = env("DATABASE_URL")
 }
+
 model User {
-  id                  String   @id @default(uuid())
-  user_id             String   @unique   
-  country             String              
-  device_os           String              
-  registration_date   DateTime            
+  id                String   @id @default(uuid())
+  user_id           String   @unique
+  country           String
+  device_os         String
+  registration_time DateTime
 
-  sessions            Session[]          
+  sessions    Session[]
+  homeMatches Match[]   @relation("HomeMatches")
+  awayMatches Match[]   @relation("AwayMatches")
+  events      Event[]
+}
 
-  homeMatches         Match[] @relation("HomeMatches") 
-  awayMatches         Match[] @relation("AwayMatches")  
+model Event {
+  id              String @id @default(uuid())
+  user_id         String
+  event_type      String
+  event_timestamp Int
+  user            User   @relation(fields: [user_id], references: [user_id])
+
+  @@index([user_id])
 }
 
 model Session {
-  id          String   @id @default(uuid())
-  user_id     String              
-  user        User     @relation(fields: [user_id], references: [user_id])
+  id         String   @id @default(uuid())
+  user_id    String
+  user       User     @relation(fields: [user_id], references: [user_id])
+  start_time DateTime
+  end_time   DateTime
 
-  start_time  DateTime            
-  end_time    DateTime?           
+  @@unique([user_id, start_time])
+  @@index([user_id])
 }
 
 model Match {
   id                String   @id @default(uuid())
-  match_id          String   
-  home_user_id      String   
-  away_user_id      String   
-
-  home_user         User?    @relation("HomeMatches", fields: [home_user_id], references: [user_id]) //oneToMany
-  away_user         User?    @relation("AwayMatches", fields: [away_user_id], references: [user_id])
-
-  home_goals_scored Int?     
-  away_goals_scored Int?     
-
-  match_start       DateTime  
-  match_end         DateTime?
+  match_id          String   @unique
+  home_user_id      String
+  away_user_id      String
+  home_user         User     @relation("HomeMatches", fields: [home_user_id], references: [user_id])
+  away_user         User     @relation("AwayMatches", fields: [away_user_id], references: [user_id])
+  home_goals_scored Int
+  away_goals_scored Int
+  start_time        DateTime
+  end_time          DateTime
 }
 
 model Timezone {
-  id        String   @id @default(uuid())
-  country   String   @unique             
-  timezone  String                       
+  id       String @id @default(uuid())
+  country  String @unique
+  timezone String
 }
